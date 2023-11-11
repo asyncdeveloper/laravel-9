@@ -37,9 +37,10 @@ class EmailController extends Controller
         return $this->success("Processing {$numberOfEmails} email(s)", Response::HTTP_ACCEPTED);
     }
 
-    //  TODO - BONUS: implement list method
-    public function list()
+    public function list(): JsonResponse
     {
+        $emails = $this->elasticsearchHelper->getStoredEmails();
 
+        return $this->success("Sent Emails Retrieved",Response::HTTP_OK, $emails);
     }
 }

@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::post('{user}/send', [EmailController::class, 'send'])->name('send')->middleware('auth.token');
+Route::get('list', [EmailController::class, 'list'])->name('list');
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
