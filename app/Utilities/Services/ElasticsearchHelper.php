@@ -28,7 +28,7 @@ class ElasticsearchHelper implements ElasticsearchHelperInterface
 
             return $data['_id'];
         } catch (\Exception $exception) {
-            Log::error($exception->getMessage());
+            Log::error($exception->getMessage(), $exception->getTrace());
             return null;
         }
     }
@@ -49,7 +49,7 @@ class ElasticsearchHelper implements ElasticsearchHelperInterface
 
             return $emails;
         } catch (\Exception $exception) {
-            Log::error($exception->getMessage());
+            Log::error($exception->getMessage(), $exception->getTrace());
             return [];
         }
     }
