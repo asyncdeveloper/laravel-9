@@ -37,6 +37,7 @@ To run the Application, you must install:
 Then run this command in project root - This will install dependencies, migrate and also seed into the database
 ```console
 $ make install
+$ make up
 ```
 
 You should be able to visit your app at http://laravel.test
@@ -46,6 +47,8 @@ Laravel Horizon is also available at http://laravel.test/horizon
 ### Environment
 An `.env` is auto created from `.env.example` on project install you can change any of the values as needed.
 
+### Token
+Update `API_TOKEN` in `.env` to match the request param `api_token`
 
 ## Testing
 To run tests:

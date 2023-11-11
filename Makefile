@@ -1,6 +1,6 @@
 install:
 	@make setup-env
-	@make up-d
+	docker compose up -d
 	docker compose exec laravel.test composer install
 	docker compose exec laravel.test php artisan key:generate
 	@make migrate-seed
@@ -13,9 +13,7 @@ restart:
 	@make down
 	@make up
 up:
-	docker compose up
-up-d:
-	docker compose up -d
+	docker compose up 
 destroy:
 	docker compose down --rmi all --volumes --remove-orphans
 	rm -rf vendor/
