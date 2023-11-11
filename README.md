@@ -67,7 +67,5 @@ $ make re-install
 
 ```console
 $ make down
-$ make up
-$ make down
 $ make migrate
 ```
