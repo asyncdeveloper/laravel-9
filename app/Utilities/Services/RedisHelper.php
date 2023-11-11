@@ -9,10 +9,11 @@ use Illuminate\Support\Facades\Log;
 class RedisHelper implements RedisHelperInterface
 {
     public function storeRecentMessage(mixed $id, string $messageSubject, string $toEmailAddress): void {
-        if (!is_null($id)) {
-            Cache::put($id, [ 'subject' => $messageSubject, 'toEmailAddress' => $toEmailAddress ]);
+        if (is_null($id)) {
+            Log::info(sprintf("%s CacheMiss 'messageSubject':%s 'toEmailAddress':%s", RedisHelper::class, $messageSubject, $toEmailAddress));
+            return;
         }
 
-        Log::info(RedisHelper::class . "Cache miss id {$id}");
+        Cache::put($id, [ 'subject' => $messageSubject, 'toEmailAddress' => $toEmailAddress ]);;
     }
 }

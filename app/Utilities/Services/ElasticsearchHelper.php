@@ -4,10 +4,11 @@ namespace App\Utilities\Services;
 use App\Utilities\Contracts\ElasticsearchHelperInterface;
 use Elasticsearch\Client;
 use Illuminate\Support\Facades\Log;
-use PHPUnit\Framework\MockObject\Exception;
 
 class ElasticsearchHelper implements ElasticsearchHelperInterface
 {
+    const TYPE = 'emails';
+    const INDEX = 'array';
     public function __construct(private Client $client)
     {
     }
@@ -16,8 +17,8 @@ class ElasticsearchHelper implements ElasticsearchHelperInterface
     {
         try {
             $data = $this->client->index([
-                'type' => $this->getType(),
-                'index' => $this->getIndex(),
+                'type' => self::TYPE,
+                'index' => self::INDEX,
                 'id' => uniqid(),
                 'body' => [
                     'message' => $messageBody,
@@ -37,8 +38,8 @@ class ElasticsearchHelper implements ElasticsearchHelperInterface
     {
         try {
             $results = $this->client->search([
-                'type' => $this->getType(),
-                'index' => $this->getIndex(),
+                'type' => self::TYPE,
+                'index' => self::INDEX,
             ]);
 
             $emails = [];
@@ -52,16 +53,6 @@ class ElasticsearchHelper implements ElasticsearchHelperInterface
             Log::error($exception->getMessage(), $exception->getTrace());
             return [];
         }
-    }
-
-    private function getIndex(): string
-    {
-        return 'emails';
-    }
-
-    private function getType(): string
-    {
-        return 'array';
     }
 
 }
