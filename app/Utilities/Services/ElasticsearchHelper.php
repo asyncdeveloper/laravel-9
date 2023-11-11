@@ -3,6 +3,8 @@
 namespace App\Utilities\Services;
 use App\Utilities\Contracts\ElasticsearchHelperInterface;
 use Elasticsearch\Client;
+use Illuminate\Support\Facades\Log;
+use PHPUnit\Framework\MockObject\Exception;
 
 class ElasticsearchHelper implements ElasticsearchHelperInterface
 {
@@ -12,34 +14,44 @@ class ElasticsearchHelper implements ElasticsearchHelperInterface
 
     public function storeEmail(string $messageBody, string $messageSubject, string $toEmailAddress): mixed
     {
-        $data = $this->client->index([
-            'type' => $this->getType(),
-            'index' => $this->getIndex(),
-            'id' => uniqid(),
-            'body' => [
-                'message' => $messageBody,
-                'subject' => $messageSubject,
-                'toEmailAddress' => $toEmailAddress,
-            ],
-        ]);
+        try {
+            $data = $this->client->index([
+                'type' => $this->getType(),
+                'index' => $this->getIndex(),
+                'id' => uniqid(),
+                'body' => [
+                    'message' => $messageBody,
+                    'subject' => $messageSubject,
+                    'toEmailAddress' => $toEmailAddress,
+                ],
+            ]);
 
-        return $data['_id'];
+            return $data['_id'];
+        } catch (\Exception $exception) {
+            Log::error($exception->getMessage());
+            return null;
+        }
     }
 
     public function getStoredEmails(): array
     {
-        $results = $this->client->search([
-            'type' => $this->getType(),
-            'index' => $this->getIndex(),
-        ]);
+        try {
+            $results = $this->client->search([
+                'type' => $this->getType(),
+                'index' => $this->getIndex(),
+            ]);
 
-        $emails = [];
+            $emails = [];
 
-        foreach ($results['hits']['hits'] as $item) {
-            $emails[] = array_merge($item['_source'], [ 'id' => $item['_id']] );
+            foreach ($results['hits']['hits'] as $item) {
+                $emails[] = array_merge($item['_source'], [ 'id' => $item['_id']] );
+            }
+
+            return $emails;
+        } catch (\Exception $exception) {
+            Log::error($exception->getMessage());
+            return [];
         }
-
-        return $emails;
     }
 
     private function getIndex(): string
