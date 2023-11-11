@@ -194,4 +194,5 @@ return [
         // ...
     ])->toArray(),
 
+    'api_token' => env('API_TOKEN', '123456'),
 ];
