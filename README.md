@@ -26,3 +26,48 @@ You can now clone your laravel-9 repository on your machine (in my case in the c
 
 cd ~/code
 git clone git@github.com:<your_username>/laravel-9.git
+
+
+## Running the Application
+
+### With Docker
+To run the Application, you must install:
+- **Docker** (https://www.docker.com/products/docker-desktop)
+
+Then run this command in project root - This will install dependencies, migrate and also seed into the database
+```console
+$ make install
+```
+
+You should be able to visit your app at http://laravel.test
+
+Laravel Horizon is also available at http://laravel.test/horizon
+
+### Environment
+An `.env` is auto created from `.env.example` on project install you can change any of the values as needed.
+
+
+## Testing
+To run tests:
+```console
+$ make run-tests
+```
+
+# Restart application
+```console
+$ make restart
+```
+
+# Re-Install Project
+```console
+$ make re-install
+```
+
+## Additional commands
+
+```console
+$ make down
+$ make up
+$ make down
+$ make migrate
+```
