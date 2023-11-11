@@ -2,25 +2,39 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\SendEmailRequest;
+use App\Jobs\SendBulkEmails;
+use App\Models\User;
+use App\Traits\ApiResponse;
 use App\Utilities\Contracts\ElasticsearchHelperInterface;
-use App\Utilities\Contracts\RedisHelperInterface;
+use Illuminate\Contracts\Container\BindingResolutionException;
+use Illuminate\Http\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 
 class EmailController extends Controller
 {
-    // TODO: finish implementing send method
-    public function send()
+    use ApiResponse;
+
+    /**
+     * @throws BindingResolutionException
+     */
+    public function __construct(private ElasticsearchHelperInterface $elasticsearchHelper)
     {
+        /** @var ElasticsearchHelper $elasticsearchHelper */
+        $this->elasticsearchHelper = app()->make(ElasticsearchHelperInterface::class);
+    }
 
+    public function send(User $user, SendEmailRequest $request): JsonResponse
+    {
+        $body = $request->validated();
 
-        /** @var ElasticsearchHelperInterface $elasticsearchHelper */
-        $elasticsearchHelper = app()->make(ElasticsearchHelperInterface::class);
-        // TODO: Create implementation for storeEmail and uncomment the following line
-        // $elasticsearchHelper->storeEmail(...);
+        $emailsData = $body['data'];
 
-        /** @var RedisHelperInterface $redisHelper */
-        $redisHelper = app()->make(RedisHelperInterface::class);
-        // TODO: Create implementation for storeRecentMessage and uncomment the following line
-        // $redisHelper->storeRecentMessage(...);
+        SendBulkEmails::dispatch($emailsData, $user);
+
+        $numberOfEmails = count($emailsData);
+
+        return $this->success("Processing {$numberOfEmails} email(s)", Response::HTTP_ACCEPTED);
     }
 
     //  TODO - BONUS: implement list method

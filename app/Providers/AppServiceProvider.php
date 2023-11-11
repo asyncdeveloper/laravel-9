@@ -5,6 +5,7 @@ namespace App\Providers;
 use App\Utilities\Contracts\ElasticsearchHelperInterface;
 use App\Utilities\Contracts\RedisHelperInterface;
 use App\Utilities\Services\ElasticsearchHelper;
+use App\Utilities\Services\RedisHelper;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
